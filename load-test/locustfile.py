@@ -3,6 +3,7 @@ from uu import encode
 
 from locust import HttpUser, TaskSet, task
 from random import randint, choice
+import locust_plugins
 
 
 class WebTasks(TaskSet):
@@ -21,13 +22,12 @@ class WebTasks(TaskSet):
         item_id3 = category_item3['id']
 
         self.client.get('/')
-        self.client.get("/login", auth=('c', 'c'))
+        self.client.get("/login", auth=('user', 'password'))
 
         self.client.get('/category.html')
         self.client.get('/detail.html?id={}'.format(item_id1))
         self.client.get('/detail.html?id={}'.format(item_id2))
 
-        # self.client.delete('/cart')
         self.client.post('/cart', json={'id': item_id2, 'quantity': 1})
         
         self.client.get('/category.html')

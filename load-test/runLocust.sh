@@ -45,8 +45,8 @@ do_exec() {
       exit 1
   fi
 
-  echo "Will run $LOCUST_FILE against $TARGET_HOST. Spawning $CLIENTS clients and $REQUESTS total requests."
-  locust --host=http://$TARGET_HOST -f $LOCUST_FILE -u=$CLIENTS --hatch-rate=5 --run-time=$REQUESTS --headless -t 10
+  echo "Will run $LOCUST_FILE against $TARGET_HOST. Spawning $CLIENTS clients. The load test will run for $REQUESTS iterations."
+  locust --host=http://$TARGET_HOST -f $LOCUST_FILE -u=$CLIENTS --hatch-rate=5 -i=$REQUESTS --headless
   echo "done"
 }
 
@@ -70,7 +70,7 @@ EOF
 
 
 
-while getopts ":d:h:c:r:" o; do
+while getopts ":d:h:c:i:" o; do
   case "${o}" in
     d)
         INITIAL_DELAY=${OPTARG}
@@ -84,7 +84,7 @@ while getopts ":d:h:c:r:" o; do
         CLIENTS=${OPTARG:-2}
         #echo $CLIENTS
         ;;
-    r)
+    i)
         REQUESTS=${OPTARG:-10}
         #echo $REQUESTS
         ;;
