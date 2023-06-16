@@ -11,7 +11,7 @@ class WebTasks(TaskSet):
     # the __init__ method is called, when an object is created from the class and initializes various attributes of the object (self)
     def __init__(self, parent):
         super().__init__(parent)
-        self.username = "user18"     #  TODO create a user with a random name every time, so that the load test is better scalable
+        self.username = "user19"     #  TODO create a user with a random name every time, so that the load test is better scalable
         self.password = "password"
         self.email = self.username + "@test.com"
         self.card_details = self.generate_random_card()
@@ -47,6 +47,7 @@ class WebTasks(TaskSet):
         self.card_details.update({"userID" : userID})
         self.address_details.update({"userID" : userID})
         
+        cleanup(self, self.card_details.get("userID"))
         #print(self.card_details)
         #print(self.address_details)
 
@@ -135,6 +136,10 @@ def generate_random_id(length, output_type):
     
     random_id = ''.join(secrets.choice(characters) for _ in range(length))
     return random_id
+
+# Deletes the users with the respective Id
+def cleanup(self, user_id):
+    self.client.delete('/customers/{}'.format(user_id))
 
 class Web(HttpUser):
     tasks = [WebTasks]
