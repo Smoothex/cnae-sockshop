@@ -38,11 +38,11 @@ spec:
             memory: 180Mi
         volumeMounts:
         - mountPath: /host/sys
-          mountPropagation: HostToContainer
+          # mountPropagation: HostToContainer (Mount propagation doesn't work on Docker Desktop: https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation)
           name: sys
           readOnly: true
         - mountPath: /host/root
-          mountPropagation: HostToContainer
+          # mountPropagation: HostToContainer (Mount propagation doesn't work on Docker Desktop: https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation)
           name: root
           readOnly: true
         ports:
