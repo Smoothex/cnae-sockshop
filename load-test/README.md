@@ -11,7 +11,7 @@ These tests simulate actual end user usage of the application. They are used to 
 ## Running locally
 
 ### Requirements 
-* [locust](https://github.com/locustio/locust) `pip install locustio`
+* [locust](https://github.com/locustio/locust) `pip install locust`
 * [locust-plugins](https://github.com/SvenskaSpel/locust-plugins) `pip install locust-plugins`
 * Start command `./runLocust.sh -h [host] -c [number of clients] -i [number of requests]`
 
