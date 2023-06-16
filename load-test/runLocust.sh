@@ -8,8 +8,9 @@ HOST="${1}"
 SCRIPT_NAME=`basename "$0"`
 INITIAL_DELAY=1
 TARGET_HOST="$HOST"
-CLIENTS=2
+USERS=2
 REQUESTS=10
+SPAWN_RATE=1
 
 
 do_check() {
@@ -45,8 +46,12 @@ do_exec() {
       exit 1
   fi
 
-  echo "Will run $LOCUST_FILE against $TARGET_HOST. Spawning $CLIENTS clients. The load test will run for $REQUESTS iterations."
-  locust --host=http://$TARGET_HOST -f $LOCUST_FILE -u=$CLIENTS --hatch-rate=5 -i=$REQUESTS --headless
+  echo "
+  Will run $LOCUST_FILE against $TARGET_HOST.
+  Will spawn $SPAWN_RATE user(s) each second until $USERS users in total are reached.
+  The load test will run for $REQUESTS iterations.
+  "
+  locust --host=http://$TARGET_HOST -f $LOCUST_FILE -u=$USERS -r=$SPAWN_RATE -i=$REQUESTS --headless
   echo "done"
 }
 
@@ -58,8 +63,9 @@ Usage:
 Options:
   -d  Delay before starting
   -h  Target host url, e.g. http://localhost/
-  -c  Number of clients (default 2)
-  -r  Number of requests (default 10)
+  -u  Peak number of concurrent Locust users (default 2)
+  -i  Number of iterations the load test runs for (default 10) - part of Locust plugins
+  -r  Indicates how many users are spawned per second until -u users are reached (default 1)
 
 Description:
   Runs a Locust load simulation against specified host.
@@ -70,7 +76,7 @@ EOF
 
 
 
-while getopts ":d:h:c:i:" o; do
+while getopts ":d:h:u:i:r:" o; do
   case "${o}" in
     d)
         INITIAL_DELAY=${OPTARG}
@@ -80,13 +86,17 @@ while getopts ":d:h:c:i:" o; do
         TARGET_HOST=${OPTARG}
         #echo $TARGET_HOST
         ;;
-    c)
-        CLIENTS=${OPTARG:-2}
-        #echo $CLIENTS
+    u)
+        USERS=${OPTARG:-2}
+        #echo $USERS
         ;;
     i)
         REQUESTS=${OPTARG:-10}
         #echo $REQUESTS
+        ;;
+    r)
+        SPAWN_RATE=${OPTARG:-1}
+        #echo $SPAWN_RATE
         ;;
     *)
         do_usage
