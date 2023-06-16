@@ -13,7 +13,7 @@ These tests simulate actual end user usage of the application. They are used to 
 ### Requirements 
 * [locust](https://github.com/locustio/locust) `pip install locustio`
 * [locust-plugins](https://github.com/SvenskaSpel/locust-plugins) `pip install locust-plugins`
-`./runLocust.sh -h [host] -c [number of clients] -i [number of requests]`
+* Start command `./runLocust.sh -h [host] -c [number of clients] -i [number of requests]`
 
 
 ## Running in Docker Container
