@@ -5,7 +5,7 @@ The Metrics Server collects metrics related to CPU and memory usage, as well as 
 ## Start the metrics server
 Apply the configuration file with kubectl:
 ```
-kubectl -n kube-system apply -f components.yaml
+kubectl -n kube-system apply -f metrics-server.yaml
 ```
 
 You can check if the metrics server pod is running in the _kube-system_ namespace with  `kubectl get pods -n kube-system`.
