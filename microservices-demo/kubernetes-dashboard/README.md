@@ -1,3 +1,5 @@
+**Make sure to [deploy the metrics server](https://github.com/Smoothex/cnae-sockshop/blob/main/microservices-demo/metrics-server/README.md) first and then proceed with starting the dashboard!**
+
 ## Deploy Dashboard
 For this, simply execute following command from the current folder:
 ```
