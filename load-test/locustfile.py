@@ -103,6 +103,9 @@ class WebTasks(TaskSet):
     # Defines the user's behavior or actions that are repeated during load testing or performance testing.
     @task
     def load(self):
+        # Clear cart
+        self.client.delete("/cart")
+
         # Chooses 3 prdoucts from the catalogue
         catalogue = self.client.get('/catalogue').json()
         id_item1 = choose_element_from_catalogue(catalogue)
