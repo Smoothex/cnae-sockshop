@@ -134,3 +134,6 @@ output-virtualbox-iso
 
 # Ignore terraform files
 .terraform  
+
+# Ignore authentication files for AWS
+terraform/auth-shell.sh
