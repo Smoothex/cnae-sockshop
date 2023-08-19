@@ -53,6 +53,12 @@ resource "aws_security_group" "k8s-security-group" {
    protocol    = "tcp"
    cidr_blocks = ["0.0.0.0/0"]
  }
+ ingress {
+  from_port   = 3
+   to_port     = 4
+   protocol    = "icmp"
+   cidr_blocks = ["0.0.0.0/0"]
+ }
   egress {
     from_port   = 0
     to_port     = 0
@@ -162,6 +168,12 @@ resource "aws_elb" "ci-sockshop-k8s-elb" {
     instance_port = 30002
     lb_protocol = "http"
     instance_protocol = "http"
+  }
+   listener {
+    lb_port = 6443
+    instance_port = 6443
+    lb_protocol = "TCP"
+    instance_protocol = "TCP"
   }
 
 }
