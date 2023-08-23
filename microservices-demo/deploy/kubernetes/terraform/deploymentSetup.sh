@@ -1,5 +1,4 @@
-
-
+#!/bin/bash
 sudo swapoff -a
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 # sudo wget https://github.com/containerd/containerd/releases/download/v1.6.16/containerd-1.6.16-l
@@ -26,7 +25,8 @@ sudo rm -f crictl-$VERSION-linux-amd64.tar.gz
 #  extra changes 
 sudo mkdir -p /etc/containerd
 sudo containerd config default | sudo tee /etc/containerd/config.toml
-sudo nano /etc/containerd/config.toml # set SystemdCgroup = true
+# sudo nano /etc/containerd/config.toml # set SystemdCgroup = true
+sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 sudo systemctl restart containerd
 sudo systemctl status containerd
 
@@ -60,7 +60,9 @@ sudo sysctl -p /etc/sysctl.conf
 
 # changes has to be made manually 
 sudo swapoff -a
-sudo nano /etc/fstab #delete eveyrhting inside the file 
+# sudo nano /etc/fstab #delete eveyrhting inside the file 
+# TODO: to be checked  : done 
+sudo truncate -s 0 /etc/fstab
 # 
 
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl
@@ -73,16 +75,15 @@ sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
 
-# new kubeadm installing 
-sudo apt-get update
-# apt-transport-https may be a dummy package; if so, you can skip that package
-sudo apt-get install -y apt-transport-https ca-certificates curl
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
-
+# # new kubeadm installing 
+# sudo apt-get update
+# # apt-transport-https may be a dummy package; if so, you can skip that package
+# sudo apt-get install -y apt-transport-https ca-certificates curl
+# curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+# echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+# sudo apt-get update
+# sudo apt-get install -y kubelet kubeadm kubectl
+# sudo apt-mark hold kubelet kubeadm kubectl
 
 
 #  Master 
@@ -101,7 +102,9 @@ kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/we
 # current problem with kubelet 
 # ! somehow it is not working and fails status check from ubuntu
 
+kubeadm join 172.31.19.208:6443 --token qmbexq.o2zsuwhk5t42b3kv \
+	--discovery-token-ca-cert-hash sha256:b1977847a9c10a3ef351d9c4a4097e1f599b833f181390da27c45ce52b8f6e66 --ignore-preflight-errors=all
 
 
 
-
+scp -i ~/.ssh/deployment-socks.pem -o StrictHostKeyChecking=no -rp deploy/kubernetes/complete-demo.yaml ubuntu@52.59.63.200:/tmp/complete-demo.yaml
