@@ -47,6 +47,18 @@ resource "aws_security_group" "k8s-security-group" {
    protocol    = "tcp"
    cidr_blocks = ["0.0.0.0/0"]
  }
+  ingress {
+   from_port   = 6443
+   to_port     = 6443
+   protocol    = "tcp"
+   cidr_blocks = ["0.0.0.0/0"]
+ }
+ ingress {
+  from_port   = 3
+   to_port     = 4
+   protocol    = "icmp"
+   cidr_blocks = ["0.0.0.0/0"]
+ }
   egress {
     from_port   = 0
     to_port     = 0
@@ -60,50 +72,69 @@ resource "aws_instance" "ci-sockshop-k8s-master" {
   ami             = "${lookup(var.aws_amis, var.aws_region)}"
   key_name        = "${var.key_name}"
   security_groups = ["${aws_security_group.k8s-security-group.name}"]
-  tags {
+  tags = {
     Name = "ci-sockshop-k8s-master"
   }
 
-  connection {
+  connection  {
+    type="ssh"
     user = "ubuntu"
     private_key = "${file("${var.private_key_path}")}"
+    host = "${self.public_ip}"
   }
 
   provisioner "file" {
-    source = "deploy/kubernetes/manifests"
-    destination = "/tmp/"
+    source = "../complete-demo.yaml"
+    destination = "/tmp/complete-demo.yaml"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -",
-      "sudo echo \"deb http://apt.kubernetes.io/ kubernetes-xenial main\" | sudo tee --append /etc/apt/sources.list.d/kubernetes.list",
+      "sudo apt-get update",
+      "sudo apt-get install -y ca-certificates curl",
+      "sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg",
+      "sudo echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee /etc/apt/sources.list.d/kubernetes.list",
       "sudo apt-get update",
       "sudo apt-get install -y docker.io",
       "sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni"
     ]
   }
 }
+# sudo apt-get update
+# sudo apt-get install -y ca-certificates curl
+# curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+# echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+# sudo apt-get update
+# sudo apt-get install -y kubectl
+output "master" {
+  value = "master information is ,${aws_instance.ci-sockshop-k8s-master.id}"
+}
 
 resource "aws_instance" "ci-sockshop-k8s-node" {
   instance_type   = "${var.node_instance_type}"
-  count           = "${var.node_count}"
+  # count           = "${var.node_count}"
   ami             = "${lookup(var.aws_amis, var.aws_region)}"
   key_name        = "${var.key_name}"
   security_groups = ["${aws_security_group.k8s-security-group.name}"]
-  tags {
+  tags ={
     Name = "ci-sockshop-k8s-node"
   }
 
   connection {
+    type = "ssh"
     user = "ubuntu"
     private_key = "${file("${var.private_key_path}")}"
+    host = "${self.public_ip}"
   }
+  // TODO: check as it is not working have to manually install 
+  // !
 
   provisioner "remote-exec" {
     inline = [
-      "sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -",
-      "sudo echo \"deb http://apt.kubernetes.io/ kubernetes-xenial main\" | sudo tee --append /etc/apt/sources.list.d/kubernetes.list",
+      "sudo apt-get update",
+      "sudo apt-get install -y ca-certificates curl",
+      "sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg",
+      "sudo echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee /etc/apt/sources.list.d/kubernetes.list",
       "sudo apt-get update",
       "sudo apt-get install -y docker.io",
       "sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni",
@@ -111,13 +142,20 @@ resource "aws_instance" "ci-sockshop-k8s-node" {
     ]
   }
 }
+output "node" {
+  value = "node information is ,${aws_instance.ci-sockshop-k8s-node.id}"
+}
+
+// ! will be done later 
 
 resource "aws_elb" "ci-sockshop-k8s-elb" {
-  depends_on = [ "aws_instance.ci-sockshop-k8s-node" ]
+  # depends_on = [ "aws_instance.ci-sockshop-k8s-node" ]
   name = "ci-sockshop-k8s-elb"
-  instances = ["${aws_instance.ci-sockshop-k8s-node.*.id}"]
-  availability_zones = ["${data.aws_availability_zones.available.names}"]
+  instances = ["${aws_instance.ci-sockshop-k8s-node.id}"]
+  # availability_zones = ["${data.aws_availability_zones.available.names}"]
+  availability_zones = ["eu-central-1a"]
   security_groups = ["${aws_security_group.k8s-security-group.id}"] 
+  # vpc_security_group_ids = ["${aws_security_group.k8s-security-group.id}"] 
   listener {
     lb_port = 80
     instance_port = 30001
@@ -131,6 +169,15 @@ resource "aws_elb" "ci-sockshop-k8s-elb" {
     lb_protocol = "http"
     instance_protocol = "http"
   }
+   listener {
+    lb_port = 6443
+    instance_port = 6443
+    lb_protocol = "TCP"
+    instance_protocol = "TCP"
+  }
 
+}
+output "aws_elb" {
+  value = "elb security group id , ${aws_security_group.k8s-security-group.id}"
 }
 

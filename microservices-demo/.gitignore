@@ -131,3 +131,9 @@ output-virtualbox-iso
 # Ignore grafanalib output
 /graphs/__pycache__/
 /graphs/*.json
+
+# Ignore terraform files
+.terraform  
+
+# Ignore authentication files for AWS
+terraform/auth-shell.sh
