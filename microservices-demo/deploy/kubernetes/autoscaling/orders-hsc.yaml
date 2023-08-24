@@ -10,7 +10,7 @@ spec:
     kind: Deployment
     name: orders
 
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 50
+  minReplicas: 3
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 60
     
