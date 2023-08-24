@@ -17,7 +17,7 @@ resource "aws_instance" "ci-sockshop-k8s-node" {
   // TODO: check as it is not working have to manually install 
   // !
 
-  provisioner "remote-exec" {
+/*   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
       "sudo apt-get install -y ca-certificates curl",
@@ -28,8 +28,8 @@ resource "aws_instance" "ci-sockshop-k8s-node" {
       "sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni",
       "sudo sysctl -w vm.max_map_count=262144"
     ]
-  }
-}
+  }*/
+} 
 output "node" {
   value = "node information is ,${aws_instance.ci-sockshop-k8s-node.id}"
 }

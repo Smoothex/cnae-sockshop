@@ -22,7 +22,7 @@ sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
 sudo rm -f crictl-$VERSION-linux-amd64.tar.gz
 
 
-#  extra changes 
+#  set default congig to systemCgroup
 sudo mkdir -p /etc/containerd
 sudo containerd config default | sudo tee /etc/containerd/config.toml
 # sudo nano /etc/containerd/config.toml # set SystemdCgroup = true
@@ -58,13 +58,11 @@ sudo modprobe br_netfilter
 sudo sysctl -p /etc/sysctl.conf
 
 
-# changes has to be made manually 
+# delete swap memory
 sudo swapoff -a
-# sudo nano /etc/fstab #delete eveyrhting inside the file 
-# TODO: to be checked  : done 
 sudo truncate -s 0 /etc/fstab
-# 
 
+# install kuebernetes  
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl
 sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
@@ -72,40 +70,8 @@ deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 sudo apt update -y
 sudo apt install -y kubelet kubeadm kubectl
+# hold the version in order to avoid changes to the version or API
 sudo apt-mark hold kubelet kubeadm kubectl
 
 
-# # new kubeadm installing 
-# sudo apt-get update
-# # apt-transport-https may be a dummy package; if so, you can skip that package
-# sudo apt-get install -y apt-transport-https ca-certificates curl
-# curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-# echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-# sudo apt-get update
-# sudo apt-get install -y kubelet kubeadm kubectl
-# sudo apt-mark hold kubelet kubeadm kubectl
 
-
-#  Master 
-
-sudo kubeadm config images pull
-
-sudo kubeadm init --ignore-preflight-errors=all > k8init.log
-
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-#  fot the master core nodes not working we need to install the network like flannel or weavenet CNI plugin
-kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-
-cat k8init.log
-
-# current problem with kubelet 
-# ! somehow it is not working and fails status check from ubuntu
-
-kubeadm join 172.31.19.208:6443 --token qmbexq.o2zsuwhk5t42b3kv \
-	--discovery-token-ca-cert-hash sha256:b1977847a9c10a3ef351d9c4a4097e1f599b833f181390da27c45ce52b8f6e66 --ignore-preflight-errors=all
-
-
-
-scp -i ~/.ssh/deployment-socks.pem -o StrictHostKeyChecking=no -rp deploy/kubernetes/complete-demo.yaml ubuntu@52.59.63.200:/tmp/complete-demo.yaml

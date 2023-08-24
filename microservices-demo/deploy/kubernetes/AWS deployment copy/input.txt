@@ -1,0 +1,59 @@
+{
+  "aws_elb": {
+    "sensitive": false,
+    "type": "string",
+    "value": "elb security group id , sg-056056fd7896c299e"
+  },
+  "image": {
+    "sensitive": false,
+    "type": "string",
+    "value": "found ami image is + ami-0c3472daea3f355b7"
+  },
+  "master": {
+    "sensitive": false,
+    "type": "string",
+    "value": "master id is ,i-0fb83c6fcebd3054a"
+  },
+  "masterIP": {
+    "sensitive": false,
+    "type": "string",
+    "value": "master ip is ,35.158.41.246"
+  },
+  "master_address": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ec2-35-158-41-246.eu-central-1.compute.amazonaws.com"
+  },
+  "node_addresses": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        [
+          "tuple",
+          [
+            "string",
+            "string",
+            "string",
+            "string",
+            "string"
+          ]
+        ]
+      ]
+    ],
+    "value": [
+      [
+        "ec2-18-184-78-4.eu-central-1.compute.amazonaws.com",
+        "ec2-3-123-20-108.eu-central-1.compute.amazonaws.com",
+        "ec2-54-93-126-212.eu-central-1.compute.amazonaws.com",
+        "ec2-3-76-226-16.eu-central-1.compute.amazonaws.com",
+        "ec2-3-71-102-104.eu-central-1.compute.amazonaws.com"
+      ]
+    ]
+  },
+  "securityGroupDetails": {
+    "sensitive": false,
+    "type": "string",
+    "value": "security group id sg-056056fd7896c299e"
+  }
+}

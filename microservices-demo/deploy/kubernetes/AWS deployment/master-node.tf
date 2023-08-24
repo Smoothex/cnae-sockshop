@@ -1,12 +1,13 @@
-resource "aws_instance" "ci-sockshop-k8s-node" {
+resource "aws_instance" "ci-sockshop-k8s-master" {
   instance_type   = "${var.node_instance_type}"
   # count           = "${var.node_count}"
   ami             = "${lookup(var.aws_amis, var.aws_region)}"
   key_name        = "${var.key_name}"
   security_groups = ["${aws_security_group.k8s-security-group.name}"]
   tags ={
-    Name = "ci-sockshop-k8s-node"
+    Name = "ci-sockshop-k8s-master"
   }
+user_data = file("${path.module}/start.sh")
 
   connection {
     type = "ssh"
@@ -14,19 +15,16 @@ resource "aws_instance" "ci-sockshop-k8s-node" {
     private_key = "${file("${var.private_key_path}")}"
     host = "${self.public_ip}"
   }
-  // TODO: check as it is not working have to manually install 
-  // !
-
-  provisioner "remote-exec" {
+  /*  provisioner "remote-exec" {
     inline = [
-      "sudo apt-get update",
-      "sudo apt-get install -y ca-certificates curl",
-      "sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg",
-      "sudo echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee /etc/apt/sources.list.d/kubernetes.list",
-      "sudo apt-get update",
-      "sudo apt-get install -y docker.io",
-      "sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni",
-      "sudo sysctl -w vm.max_map_count=262144"
+      "scp -i ${var.private_key_path} -o StrictHostKeyChecking=no -rp deploy/kubernetes/complete-demo.yaml ubuntu@${var.master_ip}:/tmp/complete-demo.yaml"
     ]
-  }
+  } */
+
+}
+output "master" {
+  value = "master id is ,${aws_instance.ci-sockshop-k8s-master.id}"
+}
+output "masterIP" {
+  value = "master ip is ,${aws_instance.ci-sockshop-k8s-master.public_ip}"
 }
