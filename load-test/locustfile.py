@@ -68,9 +68,9 @@ class WebTasks(TaskSet):
             "ccv": self.card_details["ccv"],
         }
         response = self.client.post("/cards", json=card_payload)
-        response_json = response.json()  # From here to is only for test purposes
-        id = response_json['id']
-        print("Card ID:", id)
+        # response_json = response.json()  # Uncomment for test purposes
+        # id = response_json['id']
+        # print("Card ID:", id)
 
     # Adds an address to the current user
     def create_address(self):
@@ -82,16 +82,16 @@ class WebTasks(TaskSet):
             "postcode": self.address_details["postcode"],
         }
         response = self.client.post("/addresses", json=address_payload)
-        response_json = response.json()  # From here to is only for test purposes
-        id = response_json['id']
-        print("Address ID:", id)
+        # response_json = response.json()  # Uncomment for test purposes
+        # id = response_json['id']
+        # print("Address ID:", id)
 
 ##### SCENARIO FUNCTIONS #####
 
     # This method is called when a new user (virtual user) starts running
     def on_start(self):
         self.user_id = self.register()
-        print('Username: {}'.format(self.username))
+        # print('Username: {}'.format(self.username)) # Uncomment for test purposes
         
         self.create_card()
         self.create_address()
