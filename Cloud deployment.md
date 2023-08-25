@@ -26,7 +26,7 @@ For awscli execute : `aws --version`
 
 ![Screenshot 2023-08-23 at 17.06.44.png](Cloud%20deployment%2081a84cafef4c440ebca34b823d4d9383/Screenshot_2023-08-23_at_17.06.44.png)
 
-Sock shop itself provides the documentation for AWS deployment but has been already outdated as most of the underlying infrastructure has changed and the old terraform files require new security parameters to be included. Furthermore deploying the sock shop web application, requires necessary packages to be pre installed in order to run kubernetes application. The installation process of necessary packages has too changed. Hence a new terraform installation file is available under */cnae-sockshop/microservices-demo/deploy/kubernetes/AWS deployment/*
+Sock shop itself provides the documentation for AWS deployment but has been already outdated as most of the underlying infrastructure has changed and the old terraform files require new security parameters to be included. Furthermore deploying the sock shop web application, requires necessary packages to be pre installed in order to run kubernetes application. The installation process of necessary packages has too changed. Hence a new terraform installation file is available under */cnae-sockshop/microservices-demo/deploy/kubernetes/AWS_deployment/*
 
 We have a combination of Terraform and shell scripts to automate the whole process for setting up the infrastructure and deploy sock shop smoothly.
 
