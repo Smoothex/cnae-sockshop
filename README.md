@@ -13,3 +13,5 @@ Some of the possible autoscaling techniques are:
 - making (part of the) microservice serverless
 
 Get familiar with the Sock Shop architecture and the monitoring tools we use in the [repo's Wiki](https://github.com/Smoothex/cnae-sockshop/wiki).
+
+For deployment instruction please take a look at 
