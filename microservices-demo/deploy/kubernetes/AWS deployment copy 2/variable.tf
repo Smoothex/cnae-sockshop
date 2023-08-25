@@ -5,15 +5,21 @@ variable "ports" {
 variable "image_id" {
   type = string
 }
+variable "image_name" {
+  type = string
+}
 variable "instance_type" {
   type = string
 }
 variable "secret_key" {
-  type = string
+
+
 }
 
 variable "access_key" {
-  type = string
+
+
+
 }
 
 
@@ -21,13 +27,13 @@ variable "aws_amis" {
   description = "The AMI to use for setting up the instances."
   default = {
     # Ubuntu Xenial 16.04 LTS
-    "eu-west-1" = "ami-58b7972b"
-    "eu-west-2" = "ami-ede2e889"
-    "eu-central-1" ="ami-04e601abe3e1a910f"// ami-04e601abe3e1a910f  old one -"ami-1535f57a"
-    "us-east-1" = "ami-bcd7c3ab"
-    "us-east-2" = "ami-fcc19b99"
-    "us-west-1" = "ami-ed50018d"
-    "us-west-2" = "ami-15d76075"
+    "eu-west-1"    = "ami-58b7972b"
+    "eu-west-2"    = "ami-ede2e889"
+    "eu-central-1" = "ami-04e601abe3e1a910f" // ami-04e601abe3e1a910f  old one -"ami-1535f57a"
+    "us-east-1"    = "ami-bcd7c3ab"
+    "us-east-2"    = "ami-fcc19b99"
+    "us-west-1"    = "ami-ed50018d"
+    "us-west-2"    = "ami-15d76075"
   }
 }
 
@@ -62,7 +68,7 @@ variable "node_instance_type" {
 
 variable "node_count" {
   description = "The number of nodes in the cluster."
-  default     = "2"
+  default     = "5"
 }
 
 variable "private_key_path" {

@@ -16,8 +16,8 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-output "image"{
-    value = "found ami image is + ${aws_instance.ubuntu}"
+output "image" {
+  value = "found ami image is + ${data.aws_ami.ubuntu.id}"
 
 }
 
