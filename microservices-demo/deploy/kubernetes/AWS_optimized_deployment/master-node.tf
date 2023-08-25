@@ -9,7 +9,7 @@ resource "aws_instance" "ci-sockshop-k8s-master" {
   user_data = file("${path.module}/start.sh")
 
   provisioner "file" {
-    source      = "${path.module}/../Complete_parts"
+    source      = "${path.module}/Complete_parts_new"
     destination = "/tmp/"
   }
   provisioner "file" {

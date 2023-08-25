@@ -68,7 +68,7 @@ variable "node_instance_type" {
 
 variable "node_count" {
   description = "The number of nodes in the cluster."
-  default     = "5"
+  default     = "9"
 }
 
 variable "private_key_path" {
