@@ -9,9 +9,9 @@ For this, we utilize the load testing tool [Locust](https://github.com/locustio/
 
 Some of the possible autoscaling techniques are:
 - modifying its pod's [resource requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits)
-- introducing a [Horizontal Pod Autoscaler (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+- Introducing a [Horizontal Pod Autoscaler (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 - making (part of the) microservice serverless
 
 Get familiar with the Sock Shop architecture and the monitoring tools we use in the [repo's Wiki](https://github.com/Smoothex/cnae-sockshop/wiki).
 
-For deployment instruction please take a look at 
+For deployment instructions please take a look at Cloud deployment.md
